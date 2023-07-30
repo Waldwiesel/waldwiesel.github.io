@@ -9,36 +9,36 @@
 </head>
 <body>
     <h1>ChemCalc</h1>
+    <button id="verhaltnisformel">Verhältnisformel</button>
+    <button id="summenformel">Summenformel</button>
     <div>
         <h2>Verhältnisformel</h2>
         <div>
+            <label>m(E)</label><br>
+            <input id="me" type="number" min="0" step="1" value="0.00">
+        </div>
+        <div>
             <label>m(CO<sub>2</sub>)</label><br>
-            <input id="mco2" type="number" min="0" step="1">
+            <input id="mco2" type="number" min="0" step="1" value="0.00">
         </div>
         <div>
             <label>m(H<sub>2</sub>O)</label><br>
-            <input id="mh2o" type="number" min="0" step="1">
+            <input id="mh2o" type="number" min="0" step="1" value="0.00">
         </div>
         <div>
-            <label>m(CO<sub>2</sub>)</label><br>
-            <input type="number" min="0" step="1">
+            <label>p</label><br>
+            <input id="pressure" type="number" min="0" step="1" value="101.72">
         </div>
         <div>
-            <label>m(CO<sub>2</sub>)</label><br>
-            <input type="number" min="0" step="1">
+            <label>T</label><br>
+            <input id="temperature" type="number" min="0" step="1" value="293">
         </div>
         <div>
-            <label>m(CO<sub>2</sub>)</label><br>
-            <input type="number" min="0" step="1">
+            <input id="add_elem" type="checkbox" min="0" step="1" value="0.00">
+            <label>Weiteres Element (C<sub>a</sub>H<sub>b</sub>O<sub>c</sub>X<sub>d</sub>)</label>
         </div>
-        <div>
-            <label>m(CO<sub>2</sub>)</label><br>
-            <input type="number" min="0" step="1">
-        </div>
-        <div>
-            <label>m(CO<sub>2</sub>)</label><br>
-            <input type="number" min="0" step="1">
-        </div>
+        
+        
         <button id="calc-button">Calculate</button>
     </div>
 </body>
