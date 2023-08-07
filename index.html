@@ -1,45 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="../script.js" defer></script>
-    <link rel="stylesheet" href="../styles.css">
-    <title>ChemCalc - Chemical Calculations</title>
-</head>
-<body>
-    <h1>ChemCalc</h1>
-    <button id="verhaltnisformel_button" type="button">Verhältnisformel</button>
-    <button id="summenformel_button" type="button">Summenformel</button>
-    <div id="content-window">
-        <h2>Verhältnisformel</h2>
-        <div>
-            <label>m(E)</label><br>
-            <input id="me" type="number" min="0" step="1" value="0.00">
-        </div>
-        <div>
-            <label>m(CO<sub>2</sub>)</label><br>
-            <input id="mco2" type="number" min="0" step="1" value="0.00">
-        </div>
-        <div>
-            <label>m(H<sub>2</sub>O)</label><br>
-            <input id="mh2o" type="number" min="0" step="1" value="0.00">
-        </div>
-        <div>
-            <label>p</label><br>
-            <input id="pressure" type="number" min="0" step="1" value="101.72">
-        </div>
-        <div>
-            <label>T</label><br>
-            <input id="temperature" type="number" min="0" step="1" value="293">
-        </div>
-        <div>
-            <input id="add_elem" type="checkbox" min="0" step="1" value="0.00">
-            <label>Weiteres Element (C<sub>a</sub>H<sub>b</sub>O<sub>c</sub>X<sub>d</sub>)</label>
-        </div>
-        
-        
-        <button id="calc-button" type="button">Calculate</button>
-    </div>
-</body>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="../script.js" defer></script>
+        <link rel="stylesheet" href="../styles.css">
+        <title>ChemCalc - Chemical Calculations</title>
+    </head>
+
+    <body>
+        <header>
+            <h1>ChemCalc</h1>
+        </header>
+        <nav>
+            <button id="verhaltnisformel_button" type="button">Verhältnisformel</button>
+            <button id="summenformel_button" type="button">Summenformel</button>
+        </nav>
+        <main>
+            <fieldset id="verhaltnisformel_field">
+                <legend>
+                    <h2>Verhältnisformel</h2>
+                </legend>
+                <div>
+                    <label for="ver_me">m(E)</label><br>
+                    <input id="ver_me" type="text" pattern="[0-9]+([.][0-9]*)?">
+                </div>
+                <div>
+                    <label for="ver_mco2">m(CO<sub>2</sub>)</label><br>
+                    <input id="ver_mco2" type="text" pattern="[0-9]+([.][0-9]*)?">
+                </div>
+                <div>
+                    <div>
+                        <label for="ver_vco2">V(CO<sub>2</sub>)</label><br>
+                        <input id="ver_vco2" type="text" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <label for="ver_pressure">p</label><br>
+                        <input id="ver_pressure" type="text" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <label for="ver_temperature">T</label><br>
+                        <input id="ver_temperature" type="text" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                </div>
+                <div>
+                    <label for="ver_mh2o">m(H<sub>2</sub>O)</label><br>
+                    <input id="ver_mh2o" type="text" pattern="[0-9]+([.][0-9]*)?">
+                </div>
+                <div>
+                    <Button id="ver_add-elem">Weiteres Element Hinzufügen</Button>
+                </div>
+
+                <button id="ver_calc-button" type="button" onclick="ver_calculate()">Calculate</button>
+
+                <div id="result">
+
+                    <label>C<sub>0</sub>H<sub>0</sub>O<sub>0</sub></label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>
+                    <h2>Summenformel</h2>
+                </legend>
+                <section id="sum_preparation">
+                    <label>C<sub>n(C)</sub>H<sub>n(H)</sub>O<sub>n(O)</sub></label><br>
+                    <div>
+                        <label for="sum_nc">n(C)</label><br>
+                        <input id="sum_nc" pattern="[0-9]">
+                    </div>
+                    <div>
+                        <label for="sum_nh">n(H)</label><br>
+                        <input id="sum_nh" pattern="[0-9]">
+                    </div>
+                    <div>
+                        <label for="sum_no">n(O)</label><br>
+                        <input id="sum_no" pattern="[0-9]">
+                    </div>
+                </section>
+                <section>
+                    <div>
+                        <label>&rho;(E)</label><br>
+                        <input id="sum_density" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <label>m(E)</label><br>
+                        <input id="sum_mass" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <label>V(E)</label><br>
+                        <input id="sum_volume" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <label>T(E)</label><br>
+                        <input id="sum_temperature" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <label>p(E)</label><br>
+                        <input id="sum_pressure" pattern="[0-9]+([.][0-9]*)?">
+                    </div>
+                    <div>
+                        <Button>Weiteres Element Hinzufügen</Button>
+                    </div>
+                    <div id="input_add_element">
+                    </div>
+
+
+                    <button id="sum_calc-button" type="button" onclick="sum_calculate()">Calculate</button>
+
+                    <div id="result">
+                        <label>C<sub>0</sub>H<sub>0</sub>O<sub>0</sub>X<sub>0</sub></label>
+                    </div>
+                </section>
+            </fieldset>
+        </main>
+    </body>
+
 </html>
