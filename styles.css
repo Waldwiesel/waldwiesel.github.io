@@ -1,1 +1,220 @@
+@font-face {
+    font-family: Poppins-Regular;
+    src: url(../poppins/Poppins-Regular.ttf)
+}
 
+@font-face {
+    font-family: Poppins-Medium;
+    src: url(../poppins/Poppins-Medium.ttf)
+}
+
+@font-face {
+    font-family: Poppins-Bold;
+    src: url(../poppins/Poppins-Bold.ttf)
+}
+
+@font-face {
+    font-family: Poppins-SemiBold;
+    src: url(../poppins/Poppins-SemiBold.ttf)
+}
+
+* {
+    font-family: "Poppins-Regular";
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    color: #000
+}
+
+header {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+
+    background-color: #FFFFFF88;
+    border-bottom: 0.2rem solid #000000;
+
+    z-index: 1;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.headline {
+    margin: 0.25em 0 0.25em 0.5em;
+}
+
+main {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+
+    position: relative;
+    width: 100%;
+
+    background: linear-gradient(30deg, rgba(4, 0, 68, 1) 0%, rgba(9, 9, 121, 1) 25%, rgba(52, 221, 255, 1) 100%);
+}
+
+h2 {
+    width: 100%;
+    padding: 0.2em;
+    margin-top: 0.5em;
+
+    text-align: center;
+    font-size: 2em;
+    font-weight: 600;
+    font-family: "Poppins-Bold";
+}
+
+.content-field {
+    width: 25%;
+    margin: 8rem;
+    margin-top: 10rem;
+    padding: 2rem;
+    padding-top: 1rem;
+
+    font-size: 1rem;
+    background-color: #FFFFFF;
+    border-radius: 0.6em;
+    border: none
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    position: relative;
+}
+
+.input-label {
+    padding-left: 0.2rem;
+
+    font-size: 0.8em;
+    font-weight: 500;
+    color: #888;
+}
+
+input {
+    width: 100%;
+    height: 2em;
+    border: none;
+    padding-left: 0.2rem;
+    padding-right: 0;
+
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 0.2em;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+.wrap-input {
+    position: relative;
+    width: 100%;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    border-bottom: 0.1em solid #aaa;
+}
+
+.horizontal-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+    position: relative;
+}
+
+.mutual-excl-opt {
+    display: flex;
+    flex-direction: column;
+    
+    width: 100%;
+    position: relative;
+    border-radius: 1em;
+    border: 0.5em solid #FFF
+}
+
+.vl {
+    border-left: 0.05em solid #ccc;
+}
+
+.button {
+    position: relative;
+    width: 50%;
+    padding: 0.5em;
+    margin: 1em;
+    margin-right: 0em;
+    border-radius: 0.5em;
+    border: none;
+    align-self: flex-end;   
+}
+
+.calc-button {
+    position: relative;
+    width: 10em;
+    height: 3em;
+    padding: 0.3em;
+    border-radius: 0.5em;
+    border: none;
+    align-self: flex-end;
+
+    font-size: 1.3rem;
+    font-family: "Poppins-Bold";
+    cursor: pointer; 
+    color: #FFF;
+    background-color: #0000;
+
+}
+
+.calc-button-bgdiv {
+    position: absolute;
+    left: 0%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(4, 0, 68, 1) 0%,
+                rgba(52, 221, 255, 0.712) 50%, rgba(4, 0, 68, 1) 100%);
+    transition: left 0.5s;
+    z-index:-1;
+}
+
+.wrapper-button-bg {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: block;
+    width:fit-content;
+    height: fit-content;
+    border-radius: 0.5em;
+    align-self: flex-end;
+}
+
+.wrapper-button-bg:hover .calc-button-bgdiv {
+    left:-200%
+}
+
+.result-label {
+    font-family: "Poppins-Medium";
+    font-size: 2rem;
+    align-self: center;
+}
+
+.readOnly {
+    background-color: #EEE;
+    border-color: #EEE;
+}
+
+input:read-only::placeholder {
+    color: #FFF;
+}
+
+.spacing {
+    width: 1px;
+    margin: 0 1em;
+}
