@@ -144,7 +144,7 @@ function elemDatalist(id) {
     return html_string
 }
 
-function addElem(id_value) {
+function addElem(id_value, title, placeholder) {
     trigger_elem = document.getElementById(id_value)
     id_value = id_value.split("_")[0]
     id_value = id_value + "_addElem-inputs"
@@ -159,10 +159,10 @@ function addElem(id_value) {
         '</div> \
                         <div class="spacing"></div> \
                         <div class="wrap-input"> \
-                            <label for="' + uid + '_mass"' + 'class="input-label">m</label> \
+                            <label for="' + uid + '_amount"' + 'class="input-label">' + title + '</label> \
                             <br> \
-                            <input id="' + uid + '_mass"' + 'type="text" pattern="[0-9]+([.][0-9]*)?" value="" \
-                            placeholder="Enter a mass"> \
+                            <input id="' + uid + '_amount"' + 'type="text" pattern="[0-9]+([.][0-9]*)?" value="" \
+                            placeholder="' + placeholder + '"> \
                         </div>'
     setupInputs(wrapper)
     container = document.getElementById(id_value)
@@ -176,105 +176,149 @@ function verCalculate() {
     let html_ver_field = document.getElementById("verhaltnisformel")
     let html_ver_inputs = gatherInputs(html_ver_field, "ver_")
 
-
     console.log("html_ver_inputs", html_ver_inputs)
     let mass_dict = {}
 
-    if (html_ver_inputs["mco2"].value != 0) {
-        mass_dict["C"] = Number(html_ver_inputs["mco2"].value)
-    } else {
-        mass_dict["C"] = Number(html_ver_inputs["vco2"].value) * Number(html_ver_inputs["pressure"].value) * M_dict["C"] / (Number(html_ver_inputs["temperature"].value) * M_dict["R"])
-    }
-    delete html_ver_inputs["mco2"]
-    delete html_ver_inputs["vco2"]
-    delete html_ver_inputs["pressure"]
-    delete html_ver_inputs["temperature"]
+    calcMassC(mass_dict, html_ver_inputs)
+    calcMassH(mass_dict, html_ver_inputs)
 
-    mass_dict["H"] = 2 * M_dict["H"] * Number(html_ver_inputs["mh2o"].value) / (2 * M_dict["H"] + M_dict["O"])
-    delete html_ver_inputs["mh2o"]
+    console.log(mass_dict)
 
-    console.log("mass_dict_CH", mass_dict)
+    InputstoDict(mass_dict, html_ver_inputs)
+    connectKeyValue(mass_dict)
 
-    for (let key in html_ver_inputs) {
-        if (key == "O") continue
-        currValue = html_ver_inputs[key].value
-        console.log(currValue)
-        if (!isNaN(currValue)) mass_dict[key] = Number(currValue)
-        else {
-            console.log(currValue)
-            mass_dict[key] = currValue
-        }
-    }
+    console.log(mass_dict)
 
-    for (let key in mass_dict) {
-        let shortkey = key.split("_")[0]
-        if (isNaN(shortkey)) continue
-        new_key = mass_dict[shortkey.toString() + "_name"]
-        mass_dict[new_key] = mass_dict[shortkey.toString() + "_mass"]
-        delete mass_dict[shortkey.toString() + "_name"]
-        delete mass_dict[shortkey.toString() + "_mass"]
-    }
-    delete mass_dict["me"]
-    if ((!Object.keys(mass_dict).includes("O")) && html_ver_inputs["me"].value != 0) {
-        me = html_ver_inputs["me"].value
-        for (let key in mass_dict) {
-            me -= mass_dict[key]
-        }
-        mass_dict["O"] = me
-    }
-    console.log("mass_dict", mass_dict)
+    calcNDict(mass_dict)
 
-    for (let key in mass_dict) {
-        if (mass_dict[key] == 0) {
-            delete mass_dict[key]
-            continue
-        }
-        mass_dict[key] /= M_dict[key]
-    }
-    console.log("mass_dict_n", mass_dict)
+    console.log(mass_dict)
 
-    var masses = Object.keys(mass_dict).map(function (key) {
-        return mass_dict[key]
-    })
-    console.log("massen", masses)
+    removeEmptyEntrys(mass_dict)
 
-    let min_n = Math.min(...masses)
-    console.log("minimum", min_n)
+    calcMassO(mass_dict, html_ver_inputs)
+
+    min_n = getMinValue(mass_dict)
 
     for (let key in mass_dict) {
         mass_dict[key] /= min_n
     }
     console.log("mass_dict_normed", mass_dict)
 
-    let html_ver_results = document.getElementById("ver_result")
-    counter = 1
-    allow_offset = 0.4
-    condition = false
-    for (let key in mass_dict) {
-        m_value = mass_dict[key]
-        condition = Math.abs(m_value - Math.round(m_value)) > allow_offset || condition
-    }
+    mass_dict = roundVerFormula(mass_dict, 0.4, 100)
 
-    while (condition && counter < 100) {
+    let html_ver_results = document.getElementById("ver_result")
+    html_ver_results.innerHTML = convertToFormula(mass_dict)
+}
+
+function getMinValue(dict) {
+    var values = Object.keys(dict).map(function (key) {
+        return dict[key]
+    })
+    let min_value = Math.min(...values)
+    return min_value
+}
+
+function calcNDict(mass_dict) {
+    for (let key in mass_dict) {
+        if (Object.keys(M_dict).includes(key)) mass_dict[key] /= M_dict[key]
+        else if (Object.keys(elem_names).includes(key)) {
+            mass_dict[elem_names[key]] = mass_dict[key] / M_dict[elem_names[key]]
+            delete mass_dict[key]
+        }
+        else mass_dict[key] = 0
+    }
+}
+
+function removeEmptyEntrys(dict) {
+    for (let key in dict) {
+        if (dict[key] == 0) delete dict[key]
+    }
+}
+
+function calcMassO(n_dict, inputs) {
+    delete n_dict["me"]
+    if ((!Object.keys(n_dict).includes("O")) && inputs["me"].value != 0) {
+        me = inputs["me"].value
+        for (let key in n_dict) {
+            me -= n_dict[key] * M_dict[key]
+        }
+        if (me < 0) me = 0
+        n_dict["O"] = me / M_dict["O"]
+    }
+}
+
+function connectKeyValue(dict) {
+    for (let key in dict) {
+        let shortkey = key.split("_")[0]
+        if (isNaN(shortkey)) continue
+        new_key = dict[shortkey.toString() + "_name"]
+        dict[new_key] = dict[shortkey.toString() + "_amount"]
+        delete dict[shortkey.toString() + "_name"]
+        delete dict[shortkey.toString() + "_amount"]
+    }
+}
+
+function InputstoDict(mass_dict, inputs) {
+    for (let key in inputs) {
+        currValue = inputs[key].value
+        if (!isNaN(currValue)) mass_dict[key] = Number(currValue)
+        else {
+            mass_dict[key] = currValue
+        }
+    }
+}
+
+function calcMassC(mass_dict, inputs) {
+    if (inputs["mco2"].value != 0) {
+        mass_dict["C"] = Number(inputs["mco2"].value)
+    } else {
+        mass_dict["C"] = Number(inputs["vco2"].value) * Number(inputs["pressure"].value) * M_dict["C"] / (Number(inputs["temperature"].value) * M_dict["R"])
+    }
+    delete inputs["mco2"]
+    delete inputs["vco2"]
+    delete inputs["pressure"]
+    delete inputs["temperature"]
+}
+
+function calcMassH(mass_dict, inputs) {
+    mass_dict["H"] = 2 * M_dict["H"] * Number(inputs["mh2o"].value) / (2 * M_dict["H"] + M_dict["O"])
+    delete inputs["mh2o"]
+}
+
+function roundVerFormula(n_dict, allow_offset, maxCount) {
+    counter = 1
+    condition = false
+    for (let key in n_dict) {
+        n_value = n_dict[key]
+        condition = Math.abs(n_value - Math.round(n_value)) > allow_offset || condition
+    }
+    while (condition && counter < maxCount) {
         condition = false
-        for (let key in mass_dict) {
-            mass_dict[key] *= (counter + 1) / counter
-            m_value = mass_dict[key]
-            condition = Math.abs(m_value - Math.round(m_value)) > allow_offset || condition
+        for (let key in n_dict) {
+            n_dict[key] *= (counter + 1) / counter
+            n_value = mass_dict[key]
+            condition = Math.abs(n_value - Math.round(n_value)) > allow_offset || condition
 
         }
         counter += 1
     }
-    for (let key in mass_dict) {
-        mass_dict[key] = Math.round(mass_dict[key])
-    }
-    console.log("mass_dict_calc", mass_dict)
 
-    ver_formel = ""
-    for (let key in mass_dict) {
-        ver_formel += key + "<sub>" + mass_dict[key] + "</sub>"
+    return roundSumFormula(n_dict)
+}
+
+function roundSumFormula(n_dict) {
+    for (let key in n_dict) {
+        n_dict[key] = Math.round(n_dict[key])
     }
-    html_ver_results.innerHTML = ver_formel
+    return n_dict
+}
+
+function convertToFormula(n_dict) {
+    formula = ""
+    for (let key in n_dict) {
+        formula += key + "<sub>" + n_dict[key] + "</sub>"
+    }
+    return formula
 }
 
 function transferVerFormel() {
@@ -301,34 +345,39 @@ function transferVerFormel() {
 
 }
 
+function calcMolarMass(inputs) {
+    if (inputs["density"].value != 0) density = inputs["density"].value
+    else density = inputs["mass"].value / inputs["volume"].value
+    let molar_e = M_dict["R"] * density * inputs["temperature"].value / inputs["pressure"].value
+    return molar_e
+}
+
+function prepMolarMass(list_formula) {
+    let n_dict = {}
+    let molar_mass = 0
+    for (let element of list_formula) {
+        molar_mass += M_dict[element[0]] * element[1]
+        n_dict[element[0]] = Number(element[1])
+    }
+    return [molar_mass, n_dict] 
+}
+
 function sumCalculate() {
     let html_sum_section = document.getElementById("summenformel_calc")
     let html_sum_inputs = gatherInputs(html_sum_section, "sum_")
-    if (html_sum_inputs["density"].value != 0) density = html_sum_inputs["density"].value
-    else density = html_sum_inputs["mass"].value / html_sum_inputs["volume"].value
-    let molar_e = M_dict["R"] * density * html_sum_inputs["temperature"].value / html_sum_inputs["pressure"].value
 
-    let ver_label = document.getElementById("prepformel").getElementsByTagName("label")[0]
-    let ver_stoffmengen_list = ver_label.innerText.match(/[A-Z][0-9]/g)
-    let ver_stoffmengen_dict = {}
-    let molar_ver = 0
-    for (let element of ver_stoffmengen_list) {
-        if (!(element[1] == 0)) {
-            molar_ver += M_dict[element[0]] * element[1]
-            ver_stoffmengen_dict[element[0]] = Number(element[1])
-        }
-    }
+    molar_e = calcMolarMass(html_sum_inputs)
 
+    let prep_label = document.getElementById("prepformel").getElementsByTagName("label")[0]
+    let prep_n_list = prep_label.innerText.match(/[A-Z][0-9]/g)
+    let [molar_prep, prep_n_dict] = prepMolarMass(prep_n_list)
+    removeEmptyEntrys(prep_n_dict)
+
+    let koefficent = Math.round(molar_e / molar_prep)
+    for (let key in prep_n_dict) prep_n_dict[key] *= koefficent
+    sum_formel = convertToFormula(prep_n_dict)
     let html_sum_results = document.getElementById("sum_result")
-    let koefficient = Math.round(molar_e / molar_ver)
-    let str_sumformel = ""
-    for (let key in ver_stoffmengen_dict) {
-        n_value = ver_stoffmengen_dict[key]
-        n_value *= koefficient
-        if (n_value == "") n_value = "0"
-        str_sumformel += key.toUpperCase() + "<sub>" + n_value + "</sub>"
-    }
-    html_sum_results.innerHTML = str_sumformel
+    html_sum_results.innerHTML = sum_formel
 
 
 }
