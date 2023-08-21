@@ -138,6 +138,8 @@ input::placeholder {
     justify-content: space-between;
     align-items: stretch;
 
+    width: 100%;
+
     position: relative;
 }
 
