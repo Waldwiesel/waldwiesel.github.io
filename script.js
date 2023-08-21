@@ -153,6 +153,7 @@ function addElem(id_value, title, placeholder) {
     uid = Date.now().toString().substring(3)
     wrapper.innerHTML = '<div class="wrap-input"> \
                             <label for="' + uid + '_name"' + ' class="input-label">Name</label> \
+                            <br> \
                             <input id="' + uid + '_name"' + ' list="' + uid + '_list"' + ' type="text" pattern="[A-Za-z]+" value="" \
                             placeholder="Enter a element">'
         + elemDatalist(uid) +
