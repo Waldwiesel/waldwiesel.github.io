@@ -1,139 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="../script.js" defer></script>
-        <link rel="stylesheet" href="../styles.css">
-        <title>ChemCalc - Chemical Calculations</title>
-    </head>
-    <body>
-        <header>
-            <h1 class="headline">ChemCalc</h1>
-            <nav>
-            </nav>
-        </header>
-        <main>
-            <section id="verhaltnisformel" class="content-field container">
-                <h2>Verhältnisformel</h2>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../script.js" defer></script>
+    <link rel="stylesheet" href="../styles.css">
+    <title>ChemCalc - Chemical Calculations</title>
+</head>
+
+<body>
+    <header>
+        <h1 class="headline">ChemCalc</h1>
+        <nav>
+        </nav>
+    </header>
+    <main>
+        <section id="verhaltnisformel" class="content-field container">
+            <h2>Verhältnisformel</h2>
+            <div id="horizontal-div">
                 <div class="wrap-input">
                     <label for="ver_me" class="input-label">m(E)</label>
                     <br>
-                    <input id="ver_me" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass"
-                        autofocus>
+                    <input id="ver_me" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass" autofocus>
+                    <select id="ver_me_unit" class="unit-selector">
+                        <option value="mg">mg</option>
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="t">t</option>
+                    </select>
                 </div>
+            </div>
+            <div class="horizontal-div">
+                <div class="mutual-excl-opt">
+                    <div class="wrap-input">
+                        <label for="ver_mco2" class="input-label">m(CO<sub>2</sub>)</label>
+                        <br>
+                        <input id="ver_mco2" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
+                    </div>
+                </div>
+                <div class="vl spacing"></div>
+                <div class="mutual-excl-opt">
+                    <div class="wrap-input">
+                        <label for="ver_vco2" class="input-label">V(CO<sub>2</sub>)</label>
+                        <br>
+                        <input id="ver_vco2" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="volume">
+                    </div>
+                    <div class="wrap-input">
+                        <label for="ver_pressure" class="input-label">p</label>
+                        <br>
+                        <input id="ver_pressure" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
+                            placeholder="pressure">
+                    </div>
+                    <div class="wrap-input">
+                        <label for="ver_temperature" class="input-label">T</label>
+                        <br>
+                        <input id="ver_temperature" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
+                            placeholder="temperature">
+                    </div>
+                </div>
+            </div>
+            <div class="wrap-input">
+                <label for="ver_mh2o" class="input-label">m(H<sub>2</sub>O)</label>
+                <br>
+                <input id="ver_mh2o" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
+            </div>
+            <div id="ver_addElem-inputs"></div>
+            <Button id="ver_add-elem" class="button" onclick="addElem(this.id, 'm', 'mass')">Weiteres Element
+                Hinzufügen</Button>
+            <label id="ver_result" class="result-label">C<sub>0</sub>H<sub>0</sub>O<sub>0</sub></label>
+            <div class="wrapper-button-bg">
+                <div class="calc-button-bgdiv"></div>
+                <button id="ver_calc-button" type="button" onclick="verCalculate()"
+                    class="calc-button">Calculate</button>
+            </div>
+        </section>
+        <section id="summenformel" class="content-field container">
+            <h2>Summenformel</h2>
+            <section id="prepformel" class="container">
+                <label class="result-label">C<sub>n(C)</sub>H<sub>n(H)</sub>O<sub>n(O)</sub></label>
+                <br>
+                <div class="wrap-input">
+                    <label for="prep_nc" class="input-label">n(C)</label>
+                    <br>
+                    <input id="prep_nc" pattern="[0-9]+" value="" placeholder="amount">
+                </div>
+                <div class="wrap-input">
+                    <label for="prep_nh" class="input-label">n(H)</label>
+                    <br>
+                    <input id="prep_nh" pattern="[0-9]+" value="" placeholder="amount">
+                </div>
+                <div class="wrap-input">
+                    <label for="prep_no" class="input-label">n(O)</label>
+                    <br>
+                    <input id="prep_no" pattern="[0-9]+" value="" placeholder="amount">
+                </div>
+                <div id="prep_addElem-inputs"></div>
+                <Button id="prep_add-elem" class="button" onclick="addElem(this.id, 'n', 'amount')">Weiteres Element
+                    Hinzufügen</Button>
+                <br>
+                <button id="prep_transfer-button" type="button" onclick="transferVerFormel()" class="button">Transfer
+                    berechnete Verhältnisformel</button>
+            </section>
+            <section id="summenformel_calc" class="container">
                 <div class="horizontal-div">
                     <div class="mutual-excl-opt">
                         <div class="wrap-input">
-                            <label for="ver_mco2" class="input-label">m(CO<sub>2</sub>)</label>
+                            <label for="sum_density" class="input-label">&rho;(E)</label>
                             <br>
-                            <input id="ver_mco2" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
-                                placeholder="mass">
+                            <input id="sum_density" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="density">
                         </div>
                     </div>
                     <div class="vl spacing"></div>
                     <div class="mutual-excl-opt">
                         <div class="wrap-input">
-                            <label for="ver_vco2" class="input-label">V(CO<sub>2</sub>)</label>
+                            <label for="sum_mass" class="input-label">m(E)</label>
                             <br>
-                            <input id="ver_vco2" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
-                                placeholder="volume">
+                            <input id="sum_mass" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
                         </div>
                         <div class="wrap-input">
-                            <label for="ver_pressure" class="input-label">p</label>
+                            <label for="sum_volume" class="input-label">V(E)</label>
                             <br>
-                            <input id="ver_pressure" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
-                                placeholder="pressure">
-                        </div>
-                        <div class="wrap-input">
-                            <label for="ver_temperature" class="input-label">T</label>
-                            <br>
-                            <input id="ver_temperature" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
-                                placeholder="temperature">
+                            <input id="sum_volume" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="volume">
                         </div>
                     </div>
                 </div>
                 <div class="wrap-input">
-                    <label for="ver_mh2o" class="input-label">m(H<sub>2</sub>O)</label>
+                    <label for="sum_pressure" class="input-label">p(E)</label>
                     <br>
-                    <input id="ver_mh2o" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
+                    <input id="sum_pressure" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="pressure">
                 </div>
-                <div id="ver_addElem-inputs"></div>
-                <Button id="ver_add-elem" class="button" onclick="addElem(this.id, 'm', 'mass')">Weiteres Element Hinzufügen</Button>
-                    <label id="ver_result" class="result-label">C<sub>0</sub>H<sub>0</sub>O<sub>0</sub></label>
+                <div class="wrap-input">
+                    <label for="sum_temperature" class="input-label">T(E)</label>
+                    <br>
+                    <input id="sum_temperature" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="temperature">
+                </div>
+                <label id="sum_result" class="result-label">C<sub>0</sub>H<sub>0</sub>O<sub>0</sub></label>
                 <div class="wrapper-button-bg">
                     <div class="calc-button-bgdiv"></div>
-                    <button id="ver_calc-button" type="button" onclick="verCalculate()"
+                    <button id="sum_calc-button" type="button" onclick="sumCalculate()"
                         class="calc-button">Calculate</button>
                 </div>
             </section>
-            <section id="summenformel" class="content-field container">
-                <h2>Summenformel</h2>
-                <section id="prepformel" class="container">
-                    <label class="result-label">C<sub>n(C)</sub>H<sub>n(H)</sub>O<sub>n(O)</sub></label>
-                    <br>
-                    <div class="wrap-input">
-                        <label for="prep_nc" class="input-label">n(C)</label>
-                        <br>
-                        <input id="prep_nc" pattern="[0-9]+" value="" placeholder="amount">
-                    </div>
-                    <div class="wrap-input">
-                        <label for="prep_nh" class="input-label">n(H)</label>
-                        <br>
-                        <input id="prep_nh" pattern="[0-9]+" value="" placeholder="amount">
-                    </div>
-                    <div class="wrap-input">
-                        <label for="prep_no" class="input-label">n(O)</label>
-                        <br>
-                        <input id="prep_no" pattern="[0-9]+" value="" placeholder="amount">
-                    </div>
-                    <div id="prep_addElem-inputs"></div>
-                    <Button id="prep_add-elem" class="button" onclick="addElem(this.id, 'n', 'amount')">Weiteres Element Hinzufügen</Button>
-                    <br>
-                    <button id="prep_transfer-button" type="button" onclick="transferVerFormel()"
-                            class="button">Transfer berechnete Verhältnisformel</button>
-                </section>
-                <section id="summenformel_calc" class="container">
-                    <div class="horizontal-div">
-                        <div class="mutual-excl-opt">
-                            <div class="wrap-input">
-                                <label for="sum_density" class="input-label">&rho;(E)</label>
-                                <br>
-                                <input id="sum_density" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="density">
-                            </div>
-                        </div>
-                        <div class="vl spacing"></div>
-                        <div class="mutual-excl-opt">
-                            <div class="wrap-input">
-                                <label for="sum_mass" class="input-label">m(E)</label>
-                                <br>
-                                <input id="sum_mass" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
-                            </div>
-                            <div class="wrap-input">
-                                <label for="sum_volume" class="input-label">V(E)</label>
-                                <br>
-                                <input id="sum_volume" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="volume">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="wrap-input">
-                        <label for="sum_pressure" class="input-label">p(E)</label>
-                        <br>
-                        <input id="sum_pressure" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="pressure">
-                    </div>
-                    <div class="wrap-input">
-                        <label for="sum_temperature" class="input-label">T(E)</label>
-                        <br>
-                        <input id="sum_temperature" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="temperature">
-                    </div>
-                        <label id="sum_result" class="result-label">C<sub>0</sub>H<sub>0</sub>O<sub>0</sub></label>
-                    <div class="wrapper-button-bg">
-                        <div class="calc-button-bgdiv"></div>
-                        <button id="sum_calc-button" type="button" onclick="sumCalculate()"
-                                class="calc-button">Calculate</button>
-                    </div>
-                </section>
-            </section>
-        </main>
-    </body>
+        </section>
+    </main>
+</body>
+
 </html>
