@@ -1,4 +1,4 @@
-let M_dict = {
+let M_Dict = {
     "H": 1.01, "He": 4,
     "Li": 6.94, "Be": 9.01, "B": 10.81, "C": 12, "N": 14.01, "O": 16, "F": 19, "Ne": 20.18,
     "Na": 22.99, "Mg": 24.31, "Al": 26.98, "Si": 28.09, "P": 30.97, "S": 32.07, "Cl": 35.45, "Ar": 39.95,
@@ -13,7 +13,7 @@ let M_dict = {
     "R": 8.3145
 }
 
-let elem_names = {
+let ELEM_Names = {
     "Hydrogen": "H", "Helium": "He",
     "Lithium": "Li", "Beryllium": "Be", "Boron": "B", "Carbon": "C", "Nitrogen": "N", "Oxygen": "O", "Fluorine": "F", "Neon": "Ne",
     "Sodium": "Na", "Magnesium": "Mg", "Aluminium": "Al", "Silicon": "Si", "Phosphorus": "P", "Sulfur": "S", "Chlorine": "Cl", "Argon": "Ar",
@@ -27,9 +27,7 @@ let elem_names = {
     "Rutherforium": "Rf", "Dubnium": "Db", "Seaborgium": "Sg", "Bohrium": "Bh", "Hassium": "Hs", "Meitnerium": "Mt", "Darmstadtium": "Ds", "Roentgenium": "Rg", "Copernicium": "Cn"
 }
 
-let UNIT_dict = {
-
-}
+let Mass_UnitDict = {"mg": 0.001, "g": 1, "kg": 1000, "t": 1_000_000}
 
 start()
 
@@ -44,6 +42,44 @@ function start() {
 
     setupInputs(document)
     setupPrepFormel()
+    setupUnitSelector()
+}
+
+function setupUnitSelector() {
+    let html_inputs = document.getElementsByTagName("input")
+    for (key in Object.keys(html_inputs)) {
+        input = html_inputs[key]
+        let units = null
+        let classes = input.classList
+        console.log(classes)
+        if (classes.contains("mass")) units = Mass_UnitDict
+        else if ("volume" in classes) units = V_UnitDict
+        else if ("pressure" in classes) units = P_UnitDict
+        else if ("temperature" in classes) units = T_UnitDict
+        else if ("n_unit" in classes) units = N_UnitDict
+        else if ("Molar" in classes) units = Mol_UnitDict
+
+        addUnitSelector(input, units)
+    }
+}
+
+function addUnitSelector(input, units) {
+    console.log("Triggered", input, units)
+    if (units == null) return
+    let str_options = ""
+    console.log("with content")
+    console.log(Object.keys(units), units)
+    for (key in units) {
+        str_options += '<option value="' + key + '"'
+        if (units[key] == 1) str_options += ' selected'
+        str_options += '>' + key + '</option>'
+    }
+
+    str_selector = '<select id="' + input.id + "unit" + '" class="unit-selector">'
+                + str_options +
+               '</select>'
+
+    input.insertAdjacentHTML("afterend", str_selector)
 }
 
 function setupPrepFormel() {
@@ -137,7 +173,7 @@ function gatherInputs(html_div, edit_str = "", replace_str = "") {
 
 function elemDatalist(id) {
     let html_string = "<datalist id=" + id + "_list" + ">"
-    for (key in elem_names) {
+    for (key in ELEM_Names) {
         html_string += "<option value=" + key + "></option>"
     }
     html_string += "</datalist>"
@@ -221,9 +257,9 @@ function getMinValue(dict) {
 
 function calcNDict(mass_dict) {
     for (let key in mass_dict) {
-        if (Object.keys(M_dict).includes(key)) mass_dict[key] /= M_dict[key]
-        else if (Object.keys(elem_names).includes(key)) {
-            mass_dict[elem_names[key]] = mass_dict[key] / M_dict[elem_names[key]]
+        if (Object.keys(M_Dict).includes(key)) mass_dict[key] /= M_Dict[key]
+        else if (Object.keys(ELEM_Names).includes(key)) {
+            mass_dict[ELEM_Names[key]] = mass_dict[key] / M_Dict[ELEM_Names[key]]
             delete mass_dict[key]
         }
         else mass_dict[key] = 0
@@ -241,10 +277,10 @@ function calcMassO(n_dict, inputs) {
     if ((!Object.keys(n_dict).includes("O")) && inputs["me"].value != 0) {
         me = inputs["me"].value
         for (let key in n_dict) {
-            me -= n_dict[key] * M_dict[key]
+            me -= n_dict[key] * M_Dict[key]
         }
         if (me < 0) me = 0
-        n_dict["O"] = me / M_dict["O"]
+        n_dict["O"] = me / M_Dict["O"]
     }
 }
 
@@ -273,7 +309,7 @@ function calcMassC(mass_dict, inputs) {
     if (inputs["mco2"].value != 0) {
         mass_dict["C"] = Number(inputs["mco2"].value)
     } else {
-        mass_dict["C"] = Number(inputs["vco2"].value) * Number(inputs["pressure"].value) * M_dict["C"] / (Number(inputs["temperature"].value) * M_dict["R"])
+        mass_dict["C"] = Number(inputs["vco2"].value) * Number(inputs["pressure"].value) * M_Dict["C"] / (Number(inputs["temperature"].value) * M_Dict["R"])
     }
     delete inputs["mco2"]
     delete inputs["vco2"]
@@ -282,7 +318,7 @@ function calcMassC(mass_dict, inputs) {
 }
 
 function calcMassH(mass_dict, inputs) {
-    mass_dict["H"] = 2 * M_dict["H"] * Number(inputs["mh2o"].value) / (2 * M_dict["H"] + M_dict["O"])
+    mass_dict["H"] = 2 * M_Dict["H"] * Number(inputs["mh2o"].value) / (2 * M_Dict["H"] + M_Dict["O"])
     delete inputs["mh2o"]
 }
 
@@ -332,7 +368,7 @@ function transferVerFormel() {
     let molar_ver = 0
     for (let element of stoffmengen_list) {
         if (!(element[1] == 0)) {
-            molar_ver += M_dict[element[0]] * element[1]
+            molar_ver += M_Dict[element[0]] * element[1]
             stoffmengen_dict[element[0]] = Number(element[1])
         }
     }
@@ -349,7 +385,7 @@ function transferVerFormel() {
 function calcMolarMass(inputs) {
     if (inputs["density"].value != 0) density = inputs["density"].value
     else density = inputs["mass"].value / inputs["volume"].value
-    let molar_e = M_dict["R"] * density * inputs["temperature"].value / inputs["pressure"].value
+    let molar_e = M_Dict["R"] * density * inputs["temperature"].value / inputs["pressure"].value
     return molar_e
 }
 
@@ -357,7 +393,7 @@ function prepMolarMass(list_formula) {
     let n_dict = {}
     let molar_mass = 0
     for (let element of list_formula) {
-        molar_mass += M_dict[element[0]] * element[1]
+        molar_mass += M_Dict[element[0]] * element[1]
         n_dict[element[0]] = Number(element[1])
     }
     return [molar_mass, n_dict] 
