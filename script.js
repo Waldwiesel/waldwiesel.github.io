@@ -28,6 +28,11 @@ let ELEM_Names = {
 }
 
 let Mass_UnitDict = {"mg": 0.001, "g": 1, "kg": 1000, "t": 1_000_000}
+let V_UnitDict = {"ml": 0.001, "l": 1}
+let P_UnitDict = {"hPa": 0.1, "kPa": 1}
+let T_UnitDict = {"K": 1}
+let N_UnitDict = {"mol": 1}
+let Mol_UnitDict = {"g/mol": 1}
 
 start()
 
@@ -57,7 +62,7 @@ function setupUnitSelector() {
         else if ("pressure" in classes) units = P_UnitDict
         else if ("temperature" in classes) units = T_UnitDict
         else if ("n_unit" in classes) units = N_UnitDict
-        else if ("Molar" in classes) units = Mol_UnitDict
+        else if ("molar" in classes) units = Mol_UnitDict
 
         addUnitSelector(input, units)
     }

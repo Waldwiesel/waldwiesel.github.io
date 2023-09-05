@@ -22,7 +22,7 @@
                 <label for="ver_me" class="input-label">m(E)</label>
                 <br>
                 <div class="horizontal-div">
-                    <input id="ver_me" class="mass krampf" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
+                    <input id="ver_me" class="mass" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
                         placeholder="mass" autofocus>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     <div class="wrap-input">
                         <label for="ver_mco2" class="input-label">m(CO<sub>2</sub>)</label>
                         <br>
-                        <input id="ver_mco2" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
+                        <input id="ver_mco2" class="mass" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
                     </div>
                 </div>
                 <div class="vl spacing"></div>
@@ -39,18 +39,18 @@
                     <div class="wrap-input">
                         <label for="ver_vco2" class="input-label">V(CO<sub>2</sub>)</label>
                         <br>
-                        <input id="ver_vco2" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="volume">
+                        <input id="ver_vco2" class="volume" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="volume">
                     </div>
                     <div class="wrap-input">
                         <label for="ver_pressure" class="input-label">p</label>
                         <br>
-                        <input id="ver_pressure" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
+                        <input id="ver_pressure" class="pressure" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
                             placeholder="pressure">
                     </div>
                     <div class="wrap-input">
                         <label for="ver_temperature" class="input-label">T</label>
                         <br>
-                        <input id="ver_temperature" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
+                        <input id="ver_temperature" class="temperature" type="text" pattern="[0-9]+([.][0-9]*)?" value=""
                             placeholder="temperature">
                     </div>
                 </div>
@@ -58,7 +58,7 @@
             <div class="wrap-input">
                 <label for="ver_mh2o" class="input-label">m(H<sub>2</sub>O)</label>
                 <br>
-                <input id="ver_mh2o" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
+                <input id="ver_mh2o" class="mass" type="text" pattern="[0-9]+([.][0-9]*)?" value="" placeholder="mass">
             </div>
             <div id="ver_addElem-inputs"></div>
             <Button id="ver_add-elem" class="button" onclick="addElem(this.id, 'm', 'mass')">Weiteres Element
