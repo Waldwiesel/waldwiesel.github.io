@@ -58,11 +58,11 @@ function setupUnitSelector() {
         let classes = input.classList
         console.log(classes)
         if (classes.contains("mass")) units = Mass_UnitDict
-        else if ("volume" in classes) units = V_UnitDict
-        else if ("pressure" in classes) units = P_UnitDict
-        else if ("temperature" in classes) units = T_UnitDict
-        else if ("n_unit" in classes) units = N_UnitDict
-        else if ("molar" in classes) units = Mol_UnitDict
+        else if (classes.contains("volume")) units = V_UnitDict
+        else if (classes.contains("pressure")) units = P_UnitDict
+        else if (classes.contains("temperature")) units = T_UnitDict
+        else if (classes.contains("n_unit")) units = N_UnitDict
+        else if (classes.contains("molar")) units = Mol_UnitDict
 
         addUnitSelector(input, units)
     }
